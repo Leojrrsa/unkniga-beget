@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+{% load slider_tags %}
+
+
+<div class="container">
+    <div class="row justify-content-center">
+
+        <!-- секция слева -->
+        <div class="col-xl-3 mt-4">
+
+            <form method="get" action="{% url 'tag' %}">
+                {% csrf_token %}
+                
+                    <div class="m-1">
+                       <h5>Фильтр по тегам</h5>
+                       <p>Можно выбрать несколько</p>
+                    </div>
+                    
+                    <div class="mt-2 mb-4">
+                    <select class="form-select rounded-0" name="{{ form.tags.name }}" multiple>
+                        {% for tag in form.tags.field.queryset %}
+                            <option value="{{ tag.pk }}" {% if tag.pk in form.tags.value %}selected{% endif %}>{{ tag.name }}</option>
+                        {% endfor %}
+                    </select>
+                    </div>
+
+
+
+                    <div class="mt-2 mb-2">
+                    <button type="submit" class="btn btn-custom rounded-0">Применить фильтр</button>
+                    </div>
+
+
+
+            </form>
+
+            <div class="div d-none d-xl-block">
+                <!-- Нав меню -->
+                {% include 'includes/menu.html' %}
+            </div>
+
+        </div>
+
+
+        <!-- Секция справа -->
+            <div class="col-12 col-xl-9 mt-4">
+
+                <!-- Первый баннер -->
+                <div class="mb-3" id="banner-head">
+                    {% get_banners 'header' as banners %}
+                
+                    {% for banner in banners %}
+                        {% if banner.show_on_main and request.path == '/' %}
+                            {% include "banner.html" %}
+                        {% elif not banner.show_on_main %}
+                            {% include "banner.html" %}
+                        {% endif %}
+                    {% endfor %}
+                
+                </div>
+
+                
+            {% for post in posts %}
+
+                <!-- Карточка -->
+                {% include 'includes/category_card.html' %}
+                <!-- Конец карточки --> 
+
+            {% endfor %}   
+
+
+            </div>
+    </div>
+</div>
+
+
+{% endblock %}

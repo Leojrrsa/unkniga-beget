@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+{% load slider_tags %}
+
+<div class="container">
+    <div class="row">
+
+        <div class="col-3 d-none d-xl-block my-4">
+            <p><a href="#auditory">Читательская аудитория</a></p>
+            <p><a href="#rubriki">Рубрики</a></p>
+            <p><a href="#redsovet">Редакционный совет</a></p>
+            <p><a href="#dostizheniya">Наши достижения</a></p>
+
+            <!-- Навменю -->
+            {% include 'includes/menu.html' %}
+            
+        </div>
+
+        <div class="col-12 col-xl-9 mt-4">
+
+            
+            <!-- Первый баннер -->
+            <div class="mb-3" id="banner-head">
+                {% get_banners 'header' as banners %}
+            
+                {% for banner in banners %}
+                    {% if banner.show_on_main and request.path == '/' %}
+                        {% include "banner.html" %}
+                    {% elif not banner.show_on_main %}
+                        {% include "banner.html" %}
+                    {% endif %}
+                {% endfor %}
+
+            </div>
+
+            {{ content|safe }}
+
+        </div>
+    
+    </div>
+</div>
+
+{% endblock %}

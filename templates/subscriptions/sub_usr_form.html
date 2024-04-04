@@ -1,0 +1,123 @@
+<style>
+    .error-message {
+        color: red;
+    }
+</style>
+
+<form id="subscription-user-form" method="post" action="{% url 'subscribe_user' %}">
+    {% csrf_token %}
+    <div class="row">
+        <div class="col-md-6">
+            <div class="mb-3">
+                <label for="type" class="form-label">Варианты получения журнала</label>
+                <select class="form-select" id="type" name="type" required>
+                    <option value="paper">Бумажный вариант</option>
+                    <option value="electronic">Электронный вариант</option>
+                </select>
+                <div id="error-type" class="error-message"></div>
+            </div>
+            <div class="mb-3">
+                <label for="year" class="form-label">Год</label>
+                <input type="text" class="form-control" id="year" name="year" required value="2024">
+                <div id="error-year" class="error-message"></div>
+            </div>
+            <div class="mb-3">
+                <label for="amount" class="form-label">Количество экземпляров</label>
+                <input type="number" class="form-control" id="amount" name="amount" min="1" required value="1">
+                <div id="error-amount" class="error-message"></div>
+            </div>
+            <div class="mb-3">
+                <label for="phone" class="form-label">Телефон</label>
+                <input type="text" class="form-control" id="phone" name="phone" required>
+                <div id="error-phone" class="error-message"></div>
+            </div>
+            <div class="mb-3">
+                <label for="realAddress" class="form-label">Адрес фактический</label>
+                <textarea class="form-control" id="realAddress" name="real_address" rows="2" required></textarea>
+                <div id="error-real_address" class="error-message"></div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <!-- Вторая половина полей формы -->
+            <div class="mb-3">
+                <label class="form-label">Выберите нужные номера</label>
+                <div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="selectAllCheckboxUsr">
+                        <label class="form-check-label" for="selectAllCheckbox">Выбрать все</label>
+                    </div>
+                    {% for month in months %}
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="issues" value="{{ month.id }}" id="month{{ month.id }}">
+                        <label class="form-check-label" for="month{{ month.id }}">
+                            {{ month.name }}
+                        </label>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div id="error-issues" class="error-message"></div>
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">Электронный почтовый адрес e-mail</label>
+                <input type="email" class="form-control" id="email" name="email" required>
+                <div id="error-email" class="error-message"></div>
+            </div>
+            <div class="mb-3">
+                <label for="contact" class="form-label">ФИО</label>
+                <input type="text" class="form-control" id="contact" name="contact" required>
+                <div id="error-contact" class="error-message"></div>
+            </div>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-custom">Отправить</button>
+</form>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var form = document.querySelector('#subscription-user-form');
+        form.addEventListener('input', function (event) {
+            var input = event.target;
+            if (input.tagName.toLowerCase() === 'input' || input.tagName.toLowerCase() === 'select' || input.tagName.toLowerCase() === 'textarea') {
+                var fieldName = input.name;
+                var errorField = document.querySelector('#error-' + fieldName);
+                var value = input.value.trim();
+                
+                if (fieldName === 'email') {
+                    var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (!emailRegex.test(value)) {
+                        errorField.textContent = 'Введите корректный адрес электронной почты';
+                    } else {
+                        errorField.textContent = '';
+                    }
+                } else if (fieldName === 'phone') {
+                    var phoneRegex = /^(?:\+7|8)\d{10}$/;
+                    if (!phoneRegex.test(value)) {
+                        errorField.textContent = 'Телефон должен начинаться с +7 или 8 и содержать 11 цифр';
+                    } else {
+                        errorField.textContent = '';
+                    }
+                }
+            }
+        });
+
+        form.addEventListener('submit', function (event) {
+            var formValid = true;
+            form.querySelectorAll('.error-message').forEach(function (errorField) {
+                if (errorField.textContent !== '') {
+                    formValid = false;
+                }
+            });
+            if (!formValid) {
+                event.preventDefault(); // Предотвращаем отправку формы, если есть ошибки
+            }
+        });
+    });
+
+    document.getElementById('selectAllCheckboxUsr').addEventListener('change', function() {
+        var checkboxes = document.querySelectorAll('input[name="issues"]');
+        checkboxes.forEach(function(checkbox) {
+            checkbox.checked = document.getElementById('selectAllCheckboxUsr').checked;
+        });
+    });
+</script>

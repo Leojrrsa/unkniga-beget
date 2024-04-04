@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load slider_tags %}
+{% load static %}
+
+
+<div class="container text-left">
+  <div class="row justify-content-center">
+
+        <!-- секция слева -->
+        <div class="col-3 d-none d-xl-block mt-4">
+          <!-- Нав меню -->
+          {% include 'includes/menu.html' %}
+        </div>  
+
+
+        <!-- секция справа -->
+        <div class="col-12 col-xl-9 mt-4">
+
+          <!-- Первый баннер -->
+          <div class="mb-3" id="banner-head">
+              {% get_banners 'header' as banners %}
+          
+              {% for banner in banners %}
+                  {% if banner.show_on_main and request.path == '/' %}
+                      {% include "banner.html" %}
+                  {% elif not banner.show_on_main %}
+                      {% include "banner.html" %}
+                  {% endif %}
+              {% endfor %}
+          
+          </div>
+
+          <h5>Рубрика: {{ category.name }}</h5>
+          <hr>
+          
+          {% for post in posts %}
+
+                <!-- Карточка -->
+                {% include 'includes/category_card.html' %}
+                <!-- Конец карточки --> 
+
+          {% endfor %}   
+
+                <!-- Пагинация --> 
+                <nav aria-label="Page navigation example">
+                  <ul class="pagination">
+                    {% if posts.has_previous %}
+                      <li class="page-item">
+                        <a class="page-link" href="?page=1" aria-label="First">
+                          <span aria-hidden="true">&laquo;&laquo;</span>
+                        </a>
+                      </li>
+                      <li class="page-item">
+                        <a class="page-link" href="?page={{ posts.previous_page_number }}" aria-label="Previous">
+                          <span aria-hidden="true">&laquo;</span>
+                        </a>
+                      </li>
+                    {% else %}
+                      <li class="page-item disabled">
+                        <span class="page-link" aria-hidden="true">&laquo;&laquo;</span>
+                      </li>
+                      <li class="page-item disabled">
+                        <span class="page-link" aria-hidden="true">&laquo;</span>
+                      </li>
+                    {% endif %}
+
+                    {% for i in posts.paginator.page_range %}
+                      {% if posts.number == i %}
+                        <li class="page-item active" aria-current="page">
+                          <span class="page-link">{{ i }} <span class="sr-only"></span></span>
+                        </li>
+                      {% else %}
+                        <li class="page-item">
+                          <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                        </li>
+                      {% endif %}
+                    {% endfor %}
+
+                    {% if posts.has_next %}
+                      <li class="page-item">
+                        <a class="page-link" href="?page={{ posts.next_page_number }}" aria-label="Next">
+                          <span aria-hidden="true">&raquo;</span>
+                        </a>
+                      </li>
+                      <li class="page-item">
+                        <a class="page-link" href="?page={{ posts.paginator.num_pages }}" aria-label="Last">
+                          <span aria-hidden="true">&raquo;&raquo;</span>
+                        </a>
+                      </li>
+                    {% else %}
+                      <li class="page-item disabled">
+                        <span class="page-link" aria-hidden="true">&raquo;</span>
+                      </li>
+                      <li class="page-item disabled">
+                        <span class="page-link" aria-hidden="true">&raquo;&raquo;</span>
+                      </li>
+                    {% endif %}
+                  </ul>
+                </nav>
+
+      </div>
+
+
+
+
+
+
+
+{% endblock %}
+ 

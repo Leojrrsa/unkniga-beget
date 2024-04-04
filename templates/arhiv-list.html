@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load slider_tags %}
+
+    <div class="container">
+        <div class="row justify-content-center">
+
+            <!-- секция слева -->
+            <div class="col-xl-3 mt-4">
+
+
+                    <h5>Выберите год</h5>
+                    <div class="card-body">
+                    <form method="get" action="">
+                        {{ form.year }}
+                        <button type="submit" class="btn btn-custom rounded-0 my-2">Показать обложки</button>
+                    </form>
+                    </div>   
+                    
+
+
+                    <div class="div d-none d-xl-block">
+                        <!-- Нав меню слева -->
+                        {% include 'includes/menu_va.html' %}
+                    </div>
+                
+
+
+            </div>
+
+
+            <!-- Первая секция -->
+            <div class="col-12 col-xl-9 mt-4">
+                <div class="row">
+
+
+                    <!-- Первый баннер -->
+                    <div class="mb-3" id="banner-head">
+                        {% get_banners 'header' as banners %}
+                    
+                        {% for banner in banners %}
+                            {% if banner.show_on_main and request.path == '/' %}
+                                {% include "banner.html" %}
+                            {% elif not banner.show_on_main %}
+                                {% include "banner.html" %}
+                            {% endif %}
+                        {% endfor %}
+                    
+                    </div>
+
+                    <!-- Обложки с картинками -->
+                    {% for month, posts in posts_by_month.items %}
+                        <div class="col-lg-4 col-sm-6 col-12 text-center">
+
+
+
+                            <h5 class="my-3">{{ month }}</h5>
+                            {% for post in posts %}
+                                <a href="{% url 'posts_by_year' %}?year={{ selected_year }}&month={{ month }}">
+                                    <img src="{{ post.image.url }}" alt="{{ post.title }}" class="img-fluid w-75">
+                                </a>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+
+
+                </div>    
+            </div>
+
+        </div>
+    </div>
+
+
+
+{% endblock %}

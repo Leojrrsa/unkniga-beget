@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load slider_tags %}
+{% load static %}
+
+<div class="container">
+    <div class="row">
+        <div class="col text-center mt-4">
+            <h5>Выход из личного кабинета</h5>
+            <hr>
+            <p>Вы уверенны что хотите выйти?</p>
+            <form method="post" action="{% url 'account_logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-custom rounded-0">Выход</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+{% load slider_tags %}
+
+
+
+<div class="container">
+  <div class="row justify-content-center">
+
+        <!-- Левое меню -->  
+        <div class="col-3 d-none d-xl-block">
+
+          <div class="col my-4">
+          <p>Тег: {{ tag.name }}</p>
+          <a href="{% url 'tag' %}" class="btn btn-custom rounded-0">Все теги</a>
+          </div>  
+
+
+            <!-- Нав меню -->
+            {% include 'includes/menu.html' %}
+            
+        </div>
+
+
+        <!-- секция справа -->
+        <div class="col-12 col-xl-9 mt-4">
+
+          <!-- Первый баннер -->
+          <div class="mb-3" id="banner-head">
+              {% get_banners 'header' as banners %}
+          
+              {% for banner in banners %}
+                  {% if banner.show_on_main and request.path == '/' %}
+                      {% include "banner.html" %}
+                  {% elif not banner.show_on_main %}
+                      {% include "banner.html" %}
+                  {% endif %}
+              {% endfor %}
+          
+          </div>
+
+          
+        {% for post in posts %}
+
+          <!-- Карточка -->
+          {% include 'includes/category_card.html' %}
+          <!-- Конец карточки -->  
+
+        {% endfor %}   
+
+
+      </div>
+
+{% endblock %}
